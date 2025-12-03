@@ -4,7 +4,7 @@ import com.example.gestion.adminservice.dto.StatistiquesResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import com.example.gestion.adminservice.entity.Utilisateur;
+import com.example.gestion.common.entity.Utilisateur;
 import com.example.gestion.adminservice.dto.LoginRequest;
 import com.example.gestion.adminservice.dto.LoginResponse;
 import com.example.gestion.adminservice.service.AdminService;

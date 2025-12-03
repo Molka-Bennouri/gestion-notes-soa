@@ -1,7 +1,7 @@
 package com.example.gestion.adminservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.gestion.adminservice.entity.Utilisateur;
+import com.example.gestion.common.entity.Utilisateur;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;

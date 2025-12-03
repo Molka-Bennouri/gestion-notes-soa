@@ -2,7 +2,7 @@ package com.example.gestion.adminservice.service.impl;
 
 import com.example.gestion.adminservice.dto.StatistiquesResponse;
 import org.springframework.stereotype.Service;
-import com.example.gestion.adminservice.entity.Utilisateur;
+import com.example.gestion.common.entity.Utilisateur;
 import com.example.gestion.adminservice.repository.AdminRepository;
 import com.example.gestion.adminservice.dto.LoginRequest;
 import com.example.gestion.adminservice.dto.LoginResponse;
