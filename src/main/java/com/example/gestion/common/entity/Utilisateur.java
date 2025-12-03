@@ -1,4 +1,4 @@
-package com.example.gestion.adminservice.entity;
+package com.example.gestion.common.entity;
 
 import jakarta.persistence.*;
 
@@ -26,7 +26,8 @@ public class Utilisateur {
     private TypeUtilisateur typeUtilisateur;
 
     // Constructeurs
-    public Utilisateur() {}
+    public Utilisateur() {
+    }
 
     public Utilisateur(String nom, String prenom, String email, String motDePasse, TypeUtilisateur typeUtilisateur) {
         this.nom = nom;
@@ -37,23 +38,23 @@ public class Utilisateur {
     }
 
     // Getters et Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Integer getId() {return id;}
+    public void setId(Integer id) {this.id = id;}
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    public String getNom() {return nom;}
+    public void setNom(String nom) {this.nom = nom;}
 
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public String getPrenom() {return prenom;}
+    public void setPrenom(String prenom) {this.prenom = prenom;}
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {return email;}
+    public void setEmail(String email) {this.email = email;}
 
-    public String getMotDePasse() { return motDePasse; }
-    public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
+    public String getMotDePasse() {return motDePasse;}
+    public void setMotDePasse(String motDePasse) {this.motDePasse = motDePasse;}
 
-    public TypeUtilisateur getTypeUtilisateur() { return typeUtilisateur; }
-    public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) { this.typeUtilisateur = typeUtilisateur; }
+    public TypeUtilisateur getTypeUtilisateur() {return typeUtilisateur;}
+    public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {this.typeUtilisateur = typeUtilisateur;}
 
     // Utilisez les mêmes valeurs que dans votre base MySQL
     public enum TypeUtilisateur {
