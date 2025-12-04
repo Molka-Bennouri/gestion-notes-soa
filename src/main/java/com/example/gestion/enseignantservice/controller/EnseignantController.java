@@ -34,7 +34,7 @@ public class EnseignantController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public String modifierCompte(@PathVariable Long id, @RequestBody EnseignantCompteRequest request) {
+    public String modifierCompte(@PathVariable Integer id, @RequestBody EnseignantCompteRequest request) { // Long → Integer
         return enseignantService.modifierCompte(id, request);
     }
 
@@ -58,16 +58,16 @@ public class EnseignantController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public NoteResponse modifierNote(@PathVariable Long id, @RequestBody NoteRequest request) {
-        return enseignantService.modifierNote(id, request);
+    public NoteResponse modifierNote(@PathVariable Integer id, @RequestBody NoteRequest request) { // Long → Integer
+        return enseignantService.modifierNote(id.longValue(), request); // Convertir Integer → Long si nécessaire
     }
 
     // ===============================
     // ✔ SUPPRIMER NOTE (JSON ONLY)
     // ===============================
     @DeleteMapping("/notes/delete/{id}")
-    public void supprimerNote(@PathVariable Long id) {
-        enseignantService.supprimerNote(id);
+    public void supprimerNote(@PathVariable Integer id) { // Long → Integer
+        enseignantService.supprimerNote(id.longValue()); // Convertir Integer → Long si nécessaire
     }
 
     // ===============================
@@ -78,8 +78,8 @@ public class EnseignantController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public MoyenneResponse consulterMoyenne(
-            @RequestParam Long etudiantId,
-            @RequestParam Long moduleId
+            @RequestParam Long etudiantId,  // Garder Long pour l'API
+            @RequestParam Long moduleId      // Garder Long pour l'API
     ) {
         return enseignantService.consulterMoyenne(etudiantId, moduleId);
     }

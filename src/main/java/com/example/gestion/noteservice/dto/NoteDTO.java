@@ -8,7 +8,7 @@ import java.time.LocalDate;
  */
 public class NoteDTO {
     private Integer idNote;
-    private BigDecimal valeur;
+    private Double valeur;
     private String type;
     private LocalDate dateNote;
     private Boolean publier;
@@ -22,7 +22,7 @@ public class NoteDTO {
     public NoteDTO() {
     }
 
-    public NoteDTO(Integer idNote, BigDecimal valeur, String type, LocalDate dateNote, Boolean publier,
+    public NoteDTO(Integer idNote, Double valeur, String type, LocalDate dateNote, Boolean publier,
             Integer etudiantId, String etudiantNom, String etudiantPrenom,
             Integer moduleId, String moduleNom) {
         this.idNote = idNote;
@@ -46,11 +46,11 @@ public class NoteDTO {
         this.idNote = idNote;
     }
 
-    public BigDecimal getValeur() {
+    public Double getValeur() {
         return valeur;
     }
 
-    public void setValeur(BigDecimal valeur) {
+    public void setValeur(Double valeur) {
         this.valeur = valeur;
     }
 

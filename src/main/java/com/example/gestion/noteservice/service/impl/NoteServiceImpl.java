@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Implémentation du service Note
- */
 @Service
 public class NoteServiceImpl implements NoteService {
 
@@ -26,8 +23,8 @@ public class NoteServiceImpl implements NoteService {
     private final ModuleRepository moduleRepository;
 
     public NoteServiceImpl(NoteRepository noteRepository,
-            EtudiantRepository etudiantRepository,
-            ModuleRepository moduleRepository) {
+                           EtudiantRepository etudiantRepository,
+                           ModuleRepository moduleRepository) {
         this.noteRepository = noteRepository;
         this.etudiantRepository = etudiantRepository;
         this.moduleRepository = moduleRepository;
@@ -36,8 +33,8 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     public NoteDTO creerNote(CreateNoteRequest request) {
-        // Vérifier si une note existe déjà pour cet étudiant, module et type
-        if (noteRepository.existsByEtudiantIdAndModuleIdAndType(
+        // CORRIGÉ : Utilisez la bonne méthode
+        if (noteRepository.existsByEtudiant_IdAndModule_IdModuleAndType(
                 request.getEtudiantId(),
                 request.getModuleId(),
                 request.getType())) {
@@ -83,7 +80,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDTO> getNotesByEtudiant(Integer etudiantId) {
-        return noteRepository.findByEtudiantId(etudiantId)
+        // CORRIGÉ : Utilisez la bonne méthode
+        return noteRepository.findByEtudiant_Id(etudiantId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -99,7 +97,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDTO> getNotesByModule(Integer moduleId) {
-        return noteRepository.findByModuleId(moduleId)
+        // CORRIGÉ : Utilisez la bonne méthode
+        return noteRepository.findByModule_IdModule(moduleId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -107,7 +106,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDTO> getNotesByEtudiantAndModule(Integer etudiantId, Integer moduleId) {
-        return noteRepository.findByEtudiantIdAndModuleId(etudiantId, moduleId)
+        // CORRIGÉ : Utilisez la bonne méthode
+        return noteRepository.findByEtudiant_IdAndModule_IdModule(etudiantId, moduleId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * DTO pour la création d'une nouvelle note
  */
 public class CreateNoteRequest {
-    private BigDecimal valeur;
+    private Double valeur;
     private String type;
     private LocalDate dateNote;
     private Boolean publier;
@@ -18,7 +18,7 @@ public class CreateNoteRequest {
     public CreateNoteRequest() {
     }
 
-    public CreateNoteRequest(BigDecimal valeur, String type, LocalDate dateNote, Boolean publier,
+    public CreateNoteRequest(Double valeur, String type, LocalDate dateNote, Boolean publier,
             Integer etudiantId, Integer moduleId) {
         this.valeur = valeur;
         this.type = type;
@@ -29,11 +29,11 @@ public class CreateNoteRequest {
     }
 
     // Getters et Setters
-    public BigDecimal getValeur() {
+    public Double getValeur() {
         return valeur;
     }
 
-    public void setValeur(BigDecimal valeur) {
+    public void setValeur(Double valeur) {
         this.valeur = valeur;
     }
 

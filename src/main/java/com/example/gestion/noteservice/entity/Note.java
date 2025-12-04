@@ -25,7 +25,7 @@ public class Note {
     private Integer idNote;
 
     @Column(name = "valeur", nullable = false)
-    private BigDecimal valeur;
+    private Double valeur;  // Remplacer BigDecimal par Double
 
     @Column(name = "type")
     private String type; // Ex: 'CC', 'TP', 'Examen'
@@ -48,7 +48,7 @@ public class Note {
     public Note() {
     }
 
-    public Note(BigDecimal valeur, String type, LocalDate dateNote, Boolean publier, Etudiant etudiant, Module module) {
+    public Note(double valeur, String type, LocalDate dateNote, Boolean publier, Etudiant etudiant, Module module) {
         this.valeur = valeur;
         this.type = type;
         this.dateNote = dateNote;
@@ -66,11 +66,11 @@ public class Note {
         this.idNote = idNote;
     }
 
-    public BigDecimal getValeur() {
+    public double getValeur() {
         return valeur;
     }
 
-    public void setValeur(BigDecimal valeur) {
+    public void setValeur(double valeur) {
         this.valeur = valeur;
     }
 

@@ -1,8 +1,5 @@
 package com.example.gestion.enseignantservice.dto;
 
-
-
-
 public class EnseignantCompteRequest {
 
     private String nom;

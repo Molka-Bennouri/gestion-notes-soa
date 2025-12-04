@@ -10,9 +10,5 @@ import java.util.Optional;
 @Repository
 public interface EnseignantRepository extends JpaRepository<Enseignant, Integer> {  // Changé de Long à Integer
 
-    Optional<Enseignant> findByEmail(String email);
-
-    List<Enseignant> findByNomContainingIgnoreCase(String nom);
-
     List<Enseignant> findBySpecialite(String specialite);
 }

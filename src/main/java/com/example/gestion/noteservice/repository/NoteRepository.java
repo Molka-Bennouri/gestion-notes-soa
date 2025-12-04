@@ -88,4 +88,13 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
      */
     @Query("SELECT AVG(n.valeur) FROM Note n WHERE n.etudiant.id = :etudiantId AND n.publier = true")
     Double calculateGeneralAverageByEtudiant(@Param("etudiantId") Integer etudiantId);
+
+    // Vérifier existence
+    boolean existsByEtudiant_IdAndModule_IdModuleAndType(Integer etudiantId, Integer moduleId, String type);
+
+    // Recherches
+    List<Note> findByEtudiant_Id(Integer etudiantId);
+    List<Note> findByModule_IdModule(Integer moduleId);
+    List<Note> findByEtudiant_IdAndModule_IdModule(Integer etudiantId, Integer moduleId);
 }
+
