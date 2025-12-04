@@ -2,13 +2,19 @@ package com.example.gestion.enseignantservice.service.impl;
 
 import com.example.gestion.enseignantservice.dto.*;
 import com.example.gestion.enseignantservice.entity.Enseignant;
-import com.example.gestion.enseignantservice.entity.Note;
 import com.example.gestion.enseignantservice.repository.EnseignantRepository;
-import com.example.gestion.enseignantservice.repository.NoteRepository;
-import com.example.gestion.enseignantservice.service.EnseignantService;   // ✅ IMPORTANT
-
+import com.example.gestion.enseignantservice.service.EnseignantService;
+import com.example.gestion.noteservice.entity.Note;
+import com.example.gestion.noteservice.repository.NoteRepository;
+import com.example.gestion.etudiantservice.entity.Etudiant;
+import com.example.gestion.etudiantservice.repository.EtudiantRepository;
+import com.example.gestion.moduleservice.entity.Module;
+import com.example.gestion.moduleservice.repository.ModuleRepository;
+import com.example.gestion.common.entity.Utilisateur;
+import com.example.gestion.common.repository.UtilisateurRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -16,99 +22,146 @@ public class EnseignantServiceImpl implements EnseignantService {
 
     private final EnseignantRepository enseignantRepository;
     private final NoteRepository noteRepository;
+    private final EtudiantRepository etudiantRepository;
+    private final ModuleRepository moduleRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public EnseignantServiceImpl(EnseignantRepository enseignantRepository, NoteRepository noteRepository) {
+    public EnseignantServiceImpl(EnseignantRepository enseignantRepository,
+                                 NoteRepository noteRepository,
+                                 EtudiantRepository etudiantRepository,
+                                 ModuleRepository moduleRepository,
+                                 UtilisateurRepository utilisateurRepository) {
         this.enseignantRepository = enseignantRepository;
         this.noteRepository = noteRepository;
+        this.etudiantRepository = etudiantRepository;
+        this.moduleRepository = moduleRepository;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
     public String creerCompte(EnseignantCompteRequest req) {
-        Enseignant e = new Enseignant();
-        e.setNom(req.getNom());
-        e.setPrenom(req.getPrenom());
-        e.setEmail(req.getEmail());
-        e.setMotDePasse(req.getMotDePasse());
-        e.setSpecialite(req.getSpecialite());
+        // 1. Créer l'Utilisateur
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom(req.getNom());
+        utilisateur.setPrenom(req.getPrenom());
+        utilisateur.setEmail(req.getEmail());
+        utilisateur.setMotDePasse(req.getMotDePasse());
+        utilisateur.setTypeUtilisateur(Utilisateur.TypeUtilisateur.Enseignant);
 
-        enseignantRepository.save(e);
+        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
+
+        // 2. Créer l'Enseignant lié à l'Utilisateur
+        Enseignant enseignant = new Enseignant();
+        enseignant.setUtilisateur(savedUtilisateur);
+        enseignant.setSpecialite(req.getSpecialite());
+
+        enseignantRepository.save(enseignant);
         return "Compte enseignant créé avec succès";
     }
 
     @Override
-    public String modifierCompte(Long id, EnseignantCompteRequest req) {
-        Enseignant e = enseignantRepository.findById(id)
+    public String modifierCompte(Integer id, EnseignantCompteRequest req) {
+        Enseignant enseignant = enseignantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enseignant introuvable"));
 
-        e.setNom(req.getNom());
-        e.setPrenom(req.getPrenom());
-        e.setEmail(req.getEmail());
-        e.setMotDePasse(req.getMotDePasse());
-        e.setSpecialite(req.getSpecialite());
+        // Mettre à jour l'Utilisateur associé
+        Utilisateur utilisateur = enseignant.getUtilisateur();
+        utilisateur.setNom(req.getNom());
+        utilisateur.setPrenom(req.getPrenom());
+        utilisateur.setEmail(req.getEmail());
+        utilisateur.setMotDePasse(req.getMotDePasse());
 
-        enseignantRepository.save(e);
+        utilisateurRepository.save(utilisateur);
+
+        // Mettre à jour la spécialité de l'enseignant
+        enseignant.setSpecialite(req.getSpecialite());
+        enseignantRepository.save(enseignant);
+
         return "Compte enseignant modifié";
     }
 
     @Override
     public NoteResponse ajouterNote(NoteRequest req) {
-        Note n = new Note();
-        n.setEtudiantId(req.getEtudiantId());
-        n.setModuleId(req.getModuleId());
-        n.setValeur(req.getValeur());
-        n.setType(req.getType());
-        n.setPublier(false);
+        // Convertir Long en Integer pour les IDs
+        Integer etudiantId = req.getEtudiantId().intValue();
+        Integer moduleId = req.getModuleId().intValue();
 
-        noteRepository.save(n);
+        // Récupérer l'étudiant et le module
+        Etudiant etudiant = etudiantRepository.findById(etudiantId)
+                .orElseThrow(() -> new RuntimeException("Étudiant introuvable"));
+
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new RuntimeException("Module introuvable"));
+
+        // Créer la note avec la nouvelle structure
+        Note note = new Note();
+        note.setValeur(req.getValeur());
+        note.setType(req.getType());
+        note.setDateNote(LocalDate.now());
+        note.setPublier(false);
+        note.setEtudiant(etudiant);
+        note.setModule(module);
+
+        Note savedNote = noteRepository.save(note);
 
         return new NoteResponse(
-                n.getIdNote(),
-                n.getValeur(),
-                n.getType(),
-                n.getEtudiantId(),
-                n.getModuleId(),
-                n.isPublier()
+                savedNote.getIdNote().longValue(),
+                savedNote.getValeur(),
+                savedNote.getType(),
+                savedNote.getEtudiant().getId().longValue(),
+                savedNote.getModule().getIdModule().longValue(),
+                savedNote.getPublier()
         );
     }
 
     @Override
     public NoteResponse modifierNote(Long noteId, NoteRequest req) {
-        Note n = noteRepository.findById(noteId)
+        Integer noteIdInt = noteId.intValue();
+
+        Note note = noteRepository.findById(noteIdInt)
                 .orElseThrow(() -> new RuntimeException("Note introuvable"));
 
-        n.setValeur(req.getValeur());
-        n.setType(req.getType());
+        note.setValeur(req.getValeur());
+        note.setType(req.getType());
 
-        noteRepository.save(n);
+        Note updatedNote = noteRepository.save(note);
 
         return new NoteResponse(
-                n.getIdNote(),
-                n.getValeur(),
-                n.getType(),
-                n.getEtudiantId(),
-                n.getModuleId(),
-                n.isPublier()
+                updatedNote.getIdNote().longValue(),
+                updatedNote.getValeur(),
+                updatedNote.getType(),
+                updatedNote.getEtudiant().getId().longValue(),
+                updatedNote.getModule().getIdModule().longValue(),
+                updatedNote.getPublier()
         );
     }
 
     @Override
     public void supprimerNote(Long noteId) {
-        noteRepository.deleteById(noteId);
+        noteRepository.deleteById(noteId.intValue());
     }
 
     @Override
     public MoyenneResponse consulterMoyenne(Long etudiantId, Long moduleId) {
-        List<Note> notes = noteRepository.findByEtudiantIdAndModuleId(etudiantId, moduleId);
+        Integer etudiantIdInt = etudiantId.intValue();
+        Integer moduleIdInt = moduleId.intValue();
 
-        if (notes.isEmpty())
+        // Récupérer toutes les notes de l'étudiant pour ce module
+        List<Note> notes = noteRepository.findByEtudiant_IdAndModule_IdModule(
+                etudiantIdInt, moduleIdInt);
+
+        if (notes.isEmpty()) {
             return new MoyenneResponse(etudiantId, moduleId, 0.0);
+        }
 
-        double moyenne = notes.stream()
-                .mapToDouble(Note::getValeur)
-                .average()
-                .orElse(0.0);
+        // Calculer la moyenne
+        double somme = 0.0;
+        for (Note note : notes) {
+            somme += note.getValeur();
+        }
+
+        double moyenne = somme / notes.size();
 
         return new MoyenneResponse(etudiantId, moduleId, moyenne);
     }
-
 }

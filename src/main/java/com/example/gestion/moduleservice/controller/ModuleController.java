@@ -27,17 +27,17 @@ public class ModuleController {
     }
 
     @PutMapping("/update/{id}")
-    public Module modifier(@PathVariable Long id, @RequestBody Module module) {
+    public Module modifier(@PathVariable Integer id, @RequestBody Module module) {
         return service.modifierModule(id, module);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void supprimer(@PathVariable Long id) {
+    public void supprimer(@PathVariable Integer id) {
         service.supprimerModule(id);
     }
 
     @GetMapping("/{id}")
-    public Module get(@PathVariable Long id) {
+    public Module get(@PathVariable Integer id) {
         return service.getModule(id);
     }
 
@@ -48,8 +48,8 @@ public class ModuleController {
 
     @PutMapping("/assign/{moduleId}/{enseignantId}")
     public Module assignerEnseignant(
-            @PathVariable Long moduleId,
-            @PathVariable Long enseignantId
+            @PathVariable Integer moduleId,
+            @PathVariable Integer enseignantId
     ) {
         return service.assignerEnseignant(moduleId, enseignantId);
     }
@@ -60,7 +60,7 @@ public class ModuleController {
     }
 
     @GetMapping("/enseignant/{enseignantId}")
-    public List<Module> modulesParEns(@PathVariable Long enseignantId) {
+    public List<Module> modulesParEns(@PathVariable Integer enseignantId) {
         return service.modulesParEnseignant(enseignantId);
     }
 }

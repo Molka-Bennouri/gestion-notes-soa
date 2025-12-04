@@ -1,67 +1,59 @@
 package com.example.gestion.moduleservice.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import java.math.BigDecimal;
+import com.example.gestion.enseignantservice.entity.Enseignant;
 
+/**
+ * Entité Module
+ * Relation 1..* : Un module est enseigné par exactement 1 enseignant
+ */
 @Entity
 @Table(name = "module")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Module {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_module")
-    private Long idModule;
+    private Integer idModule;  // ✅ Gardé en Integer pour correspondre à la base
 
-    @Column(name = "nom_module")
-    private String nomModule;   // ✔ correspond à la base
+    @Column(name = "nom_module", nullable = false)
+    private String nomModule;
 
-    private Double coefficient;
+    @Column(name = "coefficient", nullable = false)
+    private BigDecimal coefficient;
+
+    @Column(name = "niveau")
     private String niveau;
 
-    @Column(name = "enseignant_id")
-    private Long enseignantId; // ✔ correspond à la base
+    @ManyToOne
+    @JoinColumn(name = "enseignant_id", nullable = false)
+    private Enseignant enseignant;
 
-    public Long getIdModule() {
-        return idModule;
+    // Constructeurs
+    public Module() {
     }
 
-    public void setIdModule(Long idModule) {
-        this.idModule = idModule;
-    }
-
-    public String getNomModule() {
-        return nomModule;
-    }
-
-    public void setNomModule(String nomModule) {
+    public Module(String nomModule, BigDecimal coefficient, String niveau, Enseignant enseignant) {
         this.nomModule = nomModule;
-    }
-
-    public Double getCoefficient() {
-        return coefficient;
-    }
-
-    public void setCoefficient(Double coefficient) {
         this.coefficient = coefficient;
-    }
-
-    public String getNiveau() {
-        return niveau;
-    }
-
-    public void setNiveau(String niveau) {
         this.niveau = niveau;
+        this.enseignant = enseignant;
     }
 
-    public Long getEnseignantId() {
-        return enseignantId;
-    }
+    // Getters et Setters
+    public Integer getIdModule() {return idModule;}
+    public void setIdModule(Integer idModule) {this.idModule = idModule;}
 
-    public void setEnseignantId(Long enseignantId) {
-        this.enseignantId = enseignantId;
-    }
+    public String getNomModule() {return nomModule;}
+    public void setNomModule(String nomModule) {this.nomModule = nomModule;}
+
+    public BigDecimal getCoefficient() {return coefficient;}
+    public void setCoefficient(BigDecimal coefficient) {this.coefficient = coefficient;}
+
+    public String getNiveau() {return niveau;}
+    public void setNiveau(String niveau) {this.niveau = niveau;}
+
+    public Enseignant getEnseignant() {return enseignant;}
+    public void setEnseignant(Enseignant enseignant) {this.enseignant = enseignant;}
 }
-

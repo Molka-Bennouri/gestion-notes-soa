@@ -1,20 +1,45 @@
 package com.example.gestion.enseignantservice.entity;
 
-
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import com.example.gestion.common.entity.Utilisateur;
 
-import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "enseignant")
-public class Enseignant extends Utilisateur {
+public class Enseignant {
 
+    @Id
+    @Column(name = "id")
+    private Integer id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private Utilisateur utilisateur;
+
+    @Column(name = "specialite")
     private String specialite;
+
+    // Constructeurs
+    public Enseignant() {
+    }
+
+    public Enseignant(Utilisateur utilisateur, String specialite) {
+        this.utilisateur = utilisateur;
+        this.specialite = specialite;
+    }
+
+    // Getters et Setters
+    public Integer getId() {return id;}
+
+    public void setId(Integer id) {this.id = id;}
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
     public String getSpecialite() {
         return specialite;
