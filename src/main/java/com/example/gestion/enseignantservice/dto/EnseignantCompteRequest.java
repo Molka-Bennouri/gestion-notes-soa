@@ -1,22 +1,15 @@
-package com.example.gestion.common.dto;
+package com.example.gestion.enseignantservice.dto;
 
-import lombok.Data;
 
-@Data
-public class UtilisateurDTO {
-    private Long id;
+
+
+public class EnseignantCompteRequest {
+
     private String nom;
     private String prenom;
     private String email;
-    private String type;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String motDePasse;
+    private String specialite;
 
     public String getNom() {
         return nom;
@@ -42,11 +35,19 @@ public class UtilisateurDTO {
         this.email = email;
     }
 
-    public String getType() {
-        return type;
+    public String getMotDePasse() {
+        return motDePasse;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public String getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(String specialite) {
+        this.specialite = specialite;
     }
 }
