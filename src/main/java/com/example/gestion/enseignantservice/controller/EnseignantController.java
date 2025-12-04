@@ -1,9 +1,13 @@
 package com.example.gestion.enseignantservice.controller;
 
+import com.example.gestion.adminservice.dto.LoginRequest;
+import com.example.gestion.adminservice.dto.LoginResponse;
 import com.example.gestion.enseignantservice.dto.*;
 import com.example.gestion.enseignantservice.service.EnseignantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,17 +18,22 @@ public class EnseignantController {
     @Autowired
     private EnseignantService enseignantService;
 
-    // ===============================
-    // ✔ CRÉER COMPTE (JSON ONLY)
-    // ===============================
-    @PostMapping(
-            value = "/create",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public String creerCompte(@RequestBody EnseignantCompteRequest request) {
-        return enseignantService.creerCompte(request);
+
+    /**
+     * Authentifier un enseignant
+     * POST /api/enseignant/login
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            LoginResponse response = enseignantService.authentifierEnseignant(loginRequest);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginResponse(false, "Erreur lors de l'authentification: " + e.getMessage()));
+        }
     }
+
 
     // ===============================
     // ✔ MODIFIER COMPTE (JSON ONLY)

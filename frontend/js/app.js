@@ -41,7 +41,7 @@ class App {
                         </div>
                         <div class="input-group">
                             <label>Mot de passe</label>
-                            <input type="password" id="password" class="input-control" required placeholder="••••••••">
+                            <input type="password" id="motDePasse" class="input-control" required placeholder="••••••••">
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%">
                             Se connecter <i class="fas fa-arrow-right"></i>
@@ -58,12 +58,12 @@ class App {
         e.preventDefault();
         const type = document.getElementById('userType').value;
         const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const motDePasse = document.getElementById('motDePasse').value;
 
         try {
             let user;
             if (type === 'admin') {
-                const response = await Api.loginAdmin({ email, password });
+                const response = await Api.loginAdmin({ email, motDePasse });
                 if (response.success) {
                     // Mock user object for admin since login response might be just success/fail
                     user = { email, role: 'ADMIN', ...response };
@@ -71,14 +71,14 @@ class App {
                     throw new Error(response.message);
                 }
             } else if (type === 'etudiant') {
-                const response = await Api.loginEtudiant({ email, password });
+                const response = await Api.loginEtudiant({ email, motDePasse });
                 if (response.success) {
                     user = { email, role: 'ETUDIANT', ...response };
                 } else {
                     throw new Error(response.message);
                 }
             } else if (type === 'enseignant') {
-                const response = await Api.loginEnseignant({ email, password });
+                const response = await Api.loginEnseignant({ email, motDePasse });
                 if (response.success) {
                     user = { email, role: 'ENSEIGNANT', ...response };
                 } else {

@@ -1,5 +1,7 @@
 package com.example.gestion.enseignantservice.service.impl;
 
+import com.example.gestion.adminservice.dto.LoginRequest;
+import com.example.gestion.adminservice.dto.LoginResponse;
 import com.example.gestion.enseignantservice.dto.*;
 import com.example.gestion.enseignantservice.entity.Enseignant;
 import com.example.gestion.enseignantservice.repository.EnseignantRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnseignantServiceImpl implements EnseignantService {
@@ -39,24 +42,23 @@ public class EnseignantServiceImpl implements EnseignantService {
     }
 
     @Override
-    public String creerCompte(EnseignantCompteRequest req) {
-        // 1. Créer l'Utilisateur
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setNom(req.getNom());
-        utilisateur.setPrenom(req.getPrenom());
-        utilisateur.setEmail(req.getEmail());
-        utilisateur.setMotDePasse(req.getMotDePasse());
-        utilisateur.setTypeUtilisateur(Utilisateur.TypeUtilisateur.Enseignant);
+    public LoginResponse authentifierEnseignant(LoginRequest loginRequest) {
+        // CORRECTION : Rechercher un Enseignant au lieu d'un Etudiant
+        Optional<Enseignant> enseignantOpt = enseignantRepository.findByEmailAndMotDePasse(
+                loginRequest.getEmail(),
+                loginRequest.getMotDePasse());
 
-        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
-
-        // 2. Créer l'Enseignant lié à l'Utilisateur
-        Enseignant enseignant = new Enseignant();
-        enseignant.setUtilisateur(savedUtilisateur);
-        enseignant.setSpecialite(req.getSpecialite());
-
-        enseignantRepository.save(enseignant);
-        return "Compte enseignant créé avec succès";
+        if (enseignantOpt.isPresent()) {
+            Enseignant enseignant = enseignantOpt.get();
+            Utilisateur user = enseignant.getUtilisateur();
+            return new LoginResponse(
+                    true,
+                    "Authentification enseignant réussie", // Message adapté
+                    enseignant.getId(), // ID de l'enseignant
+                    user.getPrenom() + " " + user.getNom());
+        } else {
+            return new LoginResponse(false, "Email ou mot de passe incorrect pour un enseignant");
+        }
     }
 
     @Override

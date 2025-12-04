@@ -1,9 +1,13 @@
 package com.example.gestion.enseignantservice.service;
 
+import com.example.gestion.adminservice.dto.LoginRequest;
+import com.example.gestion.adminservice.dto.LoginResponse;
 import com.example.gestion.enseignantservice.dto.*;
 
 public interface EnseignantService {
-    String creerCompte(EnseignantCompteRequest req);
+
+    LoginResponse authentifierEnseignant(LoginRequest loginRequest);
+
     String modifierCompte(Integer id, EnseignantCompteRequest req); // Changé Long → Integer
     NoteResponse ajouterNote(NoteRequest req);
     NoteResponse modifierNote(Long noteId, NoteRequest req);
