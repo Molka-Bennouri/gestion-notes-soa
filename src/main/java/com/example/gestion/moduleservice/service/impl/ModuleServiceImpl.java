@@ -3,6 +3,8 @@ package com.example.gestion.moduleservice.service.impl;
 import com.example.gestion.moduleservice.entity.Module;
 import com.example.gestion.moduleservice.repository.ModuleRepository;
 import com.example.gestion.moduleservice.service.ModuleService;
+import com.example.gestion.enseignantservice.entity.Enseignant;
+import com.example.gestion.enseignantservice.repository.EnseignantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +12,13 @@ import java.util.List;
 @Service
 public class ModuleServiceImpl implements ModuleService {
 
-    private final ModuleRepository repository;
+    private final ModuleRepository moduleRepository;
+    private final EnseignantRepository enseignantRepository;
 
-    public ModuleServiceImpl(ModuleRepository repository) {
-        this.repository = repository;
+    public ModuleServiceImpl(ModuleRepository moduleRepository,
+                             EnseignantRepository enseignantRepository) {
+        this.moduleRepository = moduleRepository;
+        this.enseignantRepository = enseignantRepository;
     }
 
     // ============================================
@@ -21,39 +26,39 @@ public class ModuleServiceImpl implements ModuleService {
     // ============================================
     @Override
     public Module ajouterModule(Module module) {
-        return repository.save(module);
+        return moduleRepository.save(module);
     }
 
     // ============================================
     // ✔ MODIFIER MODULE
     // ============================================
     @Override
-    public Module modifierModule(Long id, Module updated) {
-        Module module = repository.findById(id)
+    public Module modifierModule(Integer id, Module updated) {
+        Module module = moduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Module non trouvé"));
 
         module.setNomModule(updated.getNomModule());
         module.setCoefficient(updated.getCoefficient());
         module.setNiveau(updated.getNiveau());
-        module.setEnseignantId(updated.getEnseignantId());
+        module.setEnseignant(updated.getEnseignant());
 
-        return repository.save(module);
+        return moduleRepository.save(module);
     }
 
     // ============================================
     // ✔ SUPPRIMER MODULE
     // ============================================
     @Override
-    public void supprimerModule(Long id) {
-        repository.deleteById(id);
+    public void supprimerModule(Integer id) {
+        moduleRepository.deleteById(id);
     }
 
     // ============================================
     // ✔ GET MODULE BY ID
     // ============================================
     @Override
-    public Module getModule(Long id) {
-        return repository.findById(id)
+    public Module getModule(Integer id) {
+        return moduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Module introuvable"));
     }
 
@@ -62,20 +67,27 @@ public class ModuleServiceImpl implements ModuleService {
     // ============================================
     @Override
     public List<Module> getAllModules() {
-        return repository.findAll();
+        return moduleRepository.findAll();
     }
 
     // ============================================
     // ✔ ASSIGNER ENSEIGNANT À UN MODULE
     // ============================================
     @Override
-    public Module assignerEnseignant(Long moduleId, Long enseignantId) {
-        Module module = repository.findById(moduleId)
+    public Module assignerEnseignant(Integer moduleId, Integer enseignantId) {
+        // 1. Récupérer le module
+        Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module introuvable"));
 
-        module.setEnseignantId(enseignantId);
+        // 2. Récupérer l'enseignant par son ID
+        Enseignant enseignant = enseignantRepository.findById(enseignantId)
+                .orElseThrow(() -> new RuntimeException("Enseignant introuvable"));
 
-        return repository.save(module);
+        // 3. Assigner l'enseignant au module
+        module.setEnseignant(enseignant);
+
+        // 4. Sauvegarder
+        return moduleRepository.save(module);
     }
 
     // ============================================
@@ -83,14 +95,14 @@ public class ModuleServiceImpl implements ModuleService {
     // ============================================
     @Override
     public List<Module> filtrerParNiveau(String niveau) {
-        return repository.findByNiveau(niveau);
+        return moduleRepository.findByNiveau(niveau);
     }
 
     // ============================================
     // ✔ MODULES D'UN ENSEIGNANT
     // ============================================
     @Override
-    public List<Module> modulesParEnseignant(Long enseignantId) {
-        return repository.findByEnseignantId(enseignantId);
+    public List<Module> modulesParEnseignant(Integer enseignantId) {
+        return moduleRepository.findByEnseignantId(enseignantId);
     }
 }
