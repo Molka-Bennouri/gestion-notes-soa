@@ -47,9 +47,6 @@ class AdminView {
                 <main class="main-content">
                     <div class="header">
                         <h2>Tableau de bord</h2>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Nouveau
-                        </button>
                     </div>
 
                     <div class="grid-cols-2" id="statsContainer">
@@ -81,7 +78,7 @@ class AdminView {
                         <h3 style="color: var(--text-secondary); font-size: 1rem;">Total Étudiants</h3>
                         <i class="fas fa-user-graduate" style="color: var(--primary-color); font-size: 1.5rem;"></i>
                     </div>
-                    <div style="font-size: 2.5rem; font-weight: 700;">${stats.nombreEtudiants || 0}</div>
+                    <div style="font-size: 2.5rem; font-weight: 700;">${stats.totalEtudiants || 0}</div>
                     <div style="color: var(--success-color); font-size: 0.9rem;">
                         <i class="fas fa-arrow-up"></i> Actifs
                     </div>
@@ -91,7 +88,7 @@ class AdminView {
                         <h3 style="color: var(--text-secondary); font-size: 1rem;">Total Enseignants</h3>
                         <i class="fas fa-chalkboard-teacher" style="color: var(--secondary-color); font-size: 1.5rem;"></i>
                     </div>
-                    <div style="font-size: 2.5rem; font-weight: 700;">${stats.nombreEnseignants || 0}</div>
+                    <div style="font-size: 2.5rem; font-weight: 700;">${stats.totalEnseignants || 0}</div>
                     <div style="color: var(--success-color); font-size: 0.9rem;">
                         <i class="fas fa-check"></i> Vérifiés
                     </div>

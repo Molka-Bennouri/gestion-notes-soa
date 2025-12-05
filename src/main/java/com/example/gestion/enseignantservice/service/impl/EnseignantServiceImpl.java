@@ -62,7 +62,7 @@ public class EnseignantServiceImpl implements EnseignantService {
     }
 
     @Override
-    public String modifierCompte(Integer id, EnseignantCompteRequest req) {
+    public String modifierCompte(Integer id, EnseignantDTO req) {
         Enseignant enseignant = enseignantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enseignant introuvable"));
 

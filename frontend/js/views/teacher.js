@@ -81,6 +81,7 @@ class TeacherView {
     async loadInitialData() {
         try {
             [this.students, this.modules, this.notes] = await Promise.all([
+
                 Api.getAllEtudiants(),
                 Api.getAllModules(),
                 Api.getAllNotes()
@@ -366,19 +367,28 @@ class TeacherView {
 
             return `
                         <div class="card">
-                            <h3>${module.nom}</h3>
-                            <p style="color: var(--text-secondary); margin: 1rem 0;">${module.description || 'Aucune description'}</p>
-                            <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
-                                <div>
-                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Notes</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600;">${moduleNotes.length}</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Moyenne</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600;">${avgNote}</div>
-                                </div>
-                            </div>
-                        </div>
+                                                    <h3>${module.nomModule}</h3>
+
+                                                    <div style="margin: 1rem 0;">
+                                                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                                            Niveau : <strong>${module.niveau}</strong>
+                                                        </div>
+                                                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                                                            Coefficient : <strong>${module.coefficient}</strong>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                                                        <div>
+                                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Notes Enregistrées</div>
+                                                            <div style="font-size: 1.5rem; font-weight: 600;">${moduleNotes.length}</div>
+                                                        </div>
+                                                        <div>
+                                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">Moyenne</div>
+                                                            <div style="font-size: 1.5rem; font-weight: 600;">${avgNote}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                     `;
         }).join('')}
             </div>

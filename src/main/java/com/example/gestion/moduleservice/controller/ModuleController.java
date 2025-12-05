@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/modules")
+@CrossOrigin(origins = "http://localhost:63342")
 public class ModuleController {
 
     private final ModuleService service;

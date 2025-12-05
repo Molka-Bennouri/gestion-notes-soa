@@ -8,7 +8,7 @@ public interface EnseignantService {
 
     LoginResponse authentifierEnseignant(LoginRequest loginRequest);
 
-    String modifierCompte(Integer id, EnseignantCompteRequest req); // Changé Long → Integer
+    String modifierCompte(Integer id, EnseignantDTO req); // Changé Long → Integer
     NoteResponse ajouterNote(NoteRequest req);
     NoteResponse modifierNote(Long noteId, NoteRequest req);
     void supprimerNote(Long noteId);

@@ -43,7 +43,7 @@ public class EnseignantController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public String modifierCompte(@PathVariable Integer id, @RequestBody EnseignantCompteRequest request) { // Long → Integer
+    public String modifierCompte(@PathVariable Integer id, @RequestBody EnseignantDTO request) { // Long → Integer
         return enseignantService.modifierCompte(id, request);
     }
 

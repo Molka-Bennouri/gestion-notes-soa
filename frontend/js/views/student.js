@@ -82,44 +82,60 @@ class StudentView {
         this.loadSection('dashboard');
     }
 
-    async loadInitialData() {
-        try {
-            const user = Auth.getUser();
+async loadInitialData() {
+    try {
+        const user = Auth.getUser();
 
-            // Get student info - we need the student ID from the user object
-            // Assuming the login response includes student data
-            if (user.id) {
-                this.student = await Api.getEtudiantById(user.id);
-            } else {
-                // If no ID in user, try to find by email
-                const allStudents = await Api.getAllEtudiants();
-                this.student = allStudents.find(s => s.email === user.email);
-            }
-
-            if (!this.student) {
-                throw new Error('Impossible de récupérer les informations de l\'étudiant');
-            }
-
-            // Get published notes for this student
-            this.notes = await Api.getPublishedNotesByEtudiant(this.student.id);
-
-            // Get all modules
-            this.modules = await Api.getAllModules();
-
-            // Calculate averages per module
-            await this.calculateAverages();
-
-        } catch (error) {
-            console.error('Error loading student data:', error);
-            document.getElementById('mainContent').innerHTML = `
-                <div class="card" style="border-color: var(--error-color);">
-                    <h3 style="color: var(--error-color);">Erreur</h3>
-                    <p>Impossible de charger vos données: ${error.message}</p>
-                </div>
-            `;
+        // 1. Récupération des informations de l'étudiant
+        if (user.id) {
+            // Supposons que l'API du login fournit un ID étudiant valide
+            this.student = await Api.getEtudiantById(user.id);
+        } else {
+            // Solution de secours : trouver l'étudiant par email
+            const allStudents = await Api.getAllEtudiants();
+            // ATTENTION : Assurez-vous que l'objet étudiant utilise 'email' comme clé.
+            this.student = allStudents.find(s => s.email === user.email);
         }
-    }
 
+        if (!this.student) {
+            throw new Error("Impossible de récupérer les informations de l'étudiant. Veuillez contacter l'administrateur.");
+        }
+
+        // 2. Récupération des notes et des modules
+        // On utilise l'ID de l'étudiant trouvé
+        const [notesData, modulesData] = await Promise.all([
+            Api.getPublishedNotesByEtudiant(this.student.id),
+            Api.getAllModules()
+        ]);
+
+        this.notes = notesData;
+
+        // 3. Transformation des données des modules pour la compatibilité front-end
+        // Renommage idModule -> id et nomModule -> nom
+        this.modules = modulesData.map(m => ({
+            id: m.idModule, // Mappage essentiel
+            nom: m.nomModule, // Mappage essentiel
+            coefficient: m.coefficient,
+            niveau: m.niveau,
+            enseignant: m.enseignant
+            // Autres propriétés si nécessaire
+        }));
+
+        // 4. Calcul des moyennes
+        // La fonction calculateAverages() peut maintenant utiliser this.notes et this.modules avec les noms standard (id, nom)
+        await this.calculateAverages();
+
+    } catch (error) {
+        console.error('Error loading student data:', error);
+        document.getElementById('mainContent').innerHTML = `
+            <div class="card" style="border-color: var(--error-color);">
+                <h3 style="color: var(--error-color);">Erreur de chargement</h3>
+                <p>Impossible de charger vos données. Détails: ${error.message}</p>
+                <p>Veuillez vérifier la console pour plus de détails sur les erreurs API ou CORS.</p>
+            </div>
+        `;
+    }
+}
     async calculateAverages() {
         // Group notes by module
         const notesByModule = {};
